@@ -1,0 +1,24 @@
+/* Color Theme Swatches in Hex */
+$primary: #275950;
+$secondary: #1C4039;
+$tertiary: #BABFBD;
+$quaternary: #BF925A;
+$accent: #BF382C;
+$waring: #F1C544;
+$error: #FF4D4D;
+$success: #43B581;
+
+/* Color Theme Swatches in RGBA */
+$primary-alpha: rgba(39, 89, 80, 1);
+$secondary-alpha: rgba(28, 63, 57, 1);
+$tertiary-alpha: rgba(185, 191, 189, 1);
+$quaternary-alpha: rgba(191, 145, 89, 1);
+$accent-alpha: rgba(191, 56, 43, 1);
+
+/* Base App Style */
+$body-font-family: 'Open Sans', sans-serif;
+$heading-font-family: 'Open Sans', sans-serif;
+$material-light: (
+        'background': #E4E4E4,
+        'text': ('primary': #707070)
+)
