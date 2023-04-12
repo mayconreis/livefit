@@ -1,6 +1,6 @@
 <template>
   <v-list>
-    <v-list-item v-for='item in navigation' :key='generateUuid()' :to='item.href'>
+    <v-list-item v-for='item in navigation' :key='item.title' :to='item.href'>
       <v-list-item-icon>
         <v-icon>{{ item.icon }}</v-icon>
       </v-list-item-icon>
@@ -14,7 +14,6 @@
 <script lang='ts'>
 import Vue, { PropType } from 'vue';
 import { TMenuItems } from '~/components/AppMenuItems/TMenuItems';
-import { v4 as uuidv4 } from 'uuid';
 
 export default Vue.extend({
   props: {
@@ -23,11 +22,5 @@ export default Vue.extend({
       required: true
     }
   },
-
-  methods: {
-    generateUuid() {
-      return uuidv4();
-    }
-  }
 });
 </script>
