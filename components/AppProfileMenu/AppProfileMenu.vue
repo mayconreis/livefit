@@ -28,6 +28,9 @@
             <v-list-item-title>
               {{ user.fullName }}
             </v-list-item-title>
+            <v-list-item-subtitle>
+              {{ userProfile[user.profile] }}
+            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -42,14 +45,20 @@
 <script lang='ts'>
 import Vue from 'vue';
 import profileNavigation from '~/components/AppProfileMenu/profileNavigation';
+import { EUserProfile, TUserResponse } from '~/store/user';
 
 export default Vue.extend({
   name: 'AppProfileMenu',
   data() {
+    const userProfile = {
+      [EUserProfile.PATIENT]: 'Paciente',
+      [EUserProfile.NUTRITIONIST]: 'Nutricionista'
+    };
     return {
       show: false,
-      user: this.$auth.user,
-      profileNavigation
+      user: this.$auth.user as TUserResponse,
+      profileNavigation,
+      userProfile
     };
   }
 });

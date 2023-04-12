@@ -17,6 +17,8 @@
     </v-app-bar>
     <AppLoginForm />
 
+    <AppRegisterForm />
+
   </v-container>
 </template>
 
