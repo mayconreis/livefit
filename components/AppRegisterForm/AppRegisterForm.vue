@@ -163,8 +163,8 @@ export default Vue.extend({
       this.seePassword = value;
     },
 
-    async showSnackbar({ message, type }: TSnackbarPayload) {
-      await this.$notifier.showMessage({ message, type });
+    showSnackbar({ message, type }: TSnackbarPayload) {
+      this.$notifier.showMessage({ message, type });
     },
 
     async handleRegisterForm() {
@@ -176,11 +176,9 @@ export default Vue.extend({
           await this.createUser(this.registerForm);
 
           this.show = false;
-
-          await this.showSnackbar({ ...defaultMessages.successStore });
         } catch (err) {
           let message = (err as AxiosError).response?.data.message || defaultMessages.errorStore.message;
-          await this.showSnackbar({ type: 'error', message });
+          this.showSnackbar({ type: 'error', message });
         } finally {
           this.$nuxt.$loading.finish();
         }
