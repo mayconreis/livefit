@@ -2,7 +2,8 @@
   <AppBodyContainer>
     <v-row>
       <v-col>
-        <v-card elevation='0' v-for='patient in patients' :key='patient.id'>
+        <span v-if='!myPatients.length' class='text-h5'>Nenhum paciente encontrado</span>
+        <v-card v-else elevation='0' v-for='patient in myPatients' :key='patient.id'>
           <v-container>
             <v-row>
               <v-col>
@@ -17,6 +18,9 @@
                          @click.stop.prevent='$nuxt.$emit("toggleRoutineDialog", {patientId: patient.id})'>Cadastrar
                     rotina
                   </v-btn>
+                  <v-btn color='accent'>
+                    Remover rotina
+                  </v-btn>
                 </v-card-actions>
               </v-col>
             </v-row>
@@ -30,11 +34,18 @@
 <script lang='ts'>
 import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
+import { TUserResponse } from '~/store/user';
 
 export default Vue.extend({
   head() {
     return {
       title: 'Meus pacientes'
+    };
+  },
+
+  data() {
+    return {
+      myPatients: [] as TUserResponse[]
     };
   },
 
@@ -47,7 +58,11 @@ export default Vue.extend({
   methods: {
     ...mapActions({
       getUsers: 'user/getUsers'
-    })
+    }),
+
+    getMyPatients() {
+      this.myPatients = this.patients.filter((patient: TUserResponse) => patient.nutritionistId === this.$auth.user?.id);
+    }
   },
 
   created() {
@@ -56,6 +71,7 @@ export default Vue.extend({
         this.$nuxt.$loading.start();
 
         await this.getUsers();
+        this.getMyPatients();
       } finally {
         this.$nuxt.$loading.finish();
       }
