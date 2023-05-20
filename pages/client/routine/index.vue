@@ -36,7 +36,10 @@
             </v-card>
           </v-timeline-item>
         </v-timeline>
-        <span v-else class='text-body-2'>Você não possui rotinas de alimentação.</span>
+        <div v-else class='text-body-2 mb-4'>Você não possui rotinas de alimentação.</div>
+        <v-btn color='primary' @click.stop.prevent='requestRoutine()'>
+          Solicitar rotina
+        </v-btn>
       </v-col>
     </v-row>
   </AppBodyContainer>
@@ -48,6 +51,7 @@ import { mapActions, mapGetters } from 'vuex';
 import { EMealsPeriod } from '~/store/routine';
 import { defaultMessages, TSnackbarPayload } from '~/store/snackbar';
 import { AxiosError } from 'axios';
+import { ESolicitationTypes } from '~/store/solicitations';
 
 export default Vue.extend({
   head() {
@@ -84,11 +88,34 @@ export default Vue.extend({
   methods: {
     ...mapActions({
       getRoutineByPatient: 'routine/getRoutineByPatient',
-      setRoutine: 'routine/setRoutine'
+      setRoutine: 'routine/setRoutine',
+      createSolicitation: 'solicitations/createSolicitation'
     }),
 
     async showSnackbar({ message, type }: TSnackbarPayload) {
       await this.$notifier.showMessage({ message, type });
+    },
+
+    async requestRoutine() {
+      if (this.$auth.user?.nutritionistId) {
+        this.$nuxt.$loading.start();
+
+        const payload = {
+          userId: this.$auth.user?.id,
+          nutritionistId: this.$auth.user?.nutritionistId,
+          solicitationType: ESolicitationTypes.ROUTINE
+        };
+
+        try {
+          await this.createSolicitation({ ...payload });
+        } catch (err) {
+          const message = (err as AxiosError).response?.data.message || defaultMessages.errorStore.message;
+          await this.showSnackbar({ message, type: 'error' });
+        } finally {
+          this.$nuxt.$loading.finish();
+          await this.showSnackbar({ message: 'Rotina solicitada com sucesso!', type: 'success' });
+        }
+      }
     }
 
   },

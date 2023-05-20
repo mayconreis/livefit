@@ -32,9 +32,15 @@ export default Vue.extend({
         {
           name: 'Perfil',
           description: 'Visualizar meu perfil',
-          path: '/client/profile',
+          path: '/client',
           show: true
         },
+        {
+          name: 'Solicitações',
+          description: 'Visualizar solicitações de rotinas e consultas',
+          path: '/client/solicitations',
+          show: this.$auth.user?.profile === EUserProfile.NUTRITIONIST
+        }
       ]
     };
   }
