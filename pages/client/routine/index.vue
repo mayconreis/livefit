@@ -108,12 +108,13 @@ export default Vue.extend({
 
         try {
           await this.createSolicitation({ ...payload });
+
+          await this.showSnackbar({ message: 'Rotina solicitada com sucesso!', type: 'success' });
         } catch (err) {
           const message = (err as AxiosError).response?.data.message || defaultMessages.errorStore.message;
           await this.showSnackbar({ message, type: 'error' });
         } finally {
           this.$nuxt.$loading.finish();
-          await this.showSnackbar({ message: 'Rotina solicitada com sucesso!', type: 'success' });
         }
       }
     }
