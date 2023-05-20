@@ -36,12 +36,20 @@ export const defaultMessages = {
     message: 'Falha ao cadastrar este registros, por favor tente novamente!',
     type: 'ERROR'
   },
+  errorDelete: {
+    message: 'Falha ao remover este registro, por favor tente novamente!',
+    type: 'ERROR'
+  },
   successStore: {
     message: 'Registro cadastrado com sucesso!',
     type: 'SUCCESS'
   },
   successUpdate: {
     message: 'Registro alterado com sucesso!',
+    type: 'SUCCESS'
+  },
+  successDelete: {
+    message: 'Registro removido com sucesso!',
     type: 'SUCCESS'
   },
   successLoggedOut: {

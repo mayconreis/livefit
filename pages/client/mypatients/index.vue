@@ -14,11 +14,13 @@
               </v-col>
               <v-col>
                 <v-card-actions class='justify-end'>
-                  <v-btn color='primary'
-                         @click.stop.prevent='$nuxt.$emit("toggleRoutineDialog", {patientId: patient.id})'>Cadastrar
-                    rotina
+                  <v-btn
+                    color='primary'
+                    @click.stop.prevent='$nuxt.$emit("toggleRoutineDialog", {patientId: patient.id})'
+                  >
+                    Cadastrar rotina
                   </v-btn>
-                  <v-btn color='accent'>
+                  <v-btn color='accent' @click.stop.prevent='handleDeleteRoutine(patient.id)'>
                     Remover rotina
                   </v-btn>
                 </v-card-actions>
@@ -35,6 +37,9 @@
 import Vue from 'vue';
 import { mapActions, mapGetters } from 'vuex';
 import { TUserResponse } from '~/store/user';
+import { defaultMessages, TSnackbarPayload } from '~/store/snackbar';
+import { AxiosError } from 'axios';
+import routine from '~/pages/client/routine/index.vue';
 
 export default Vue.extend({
   head() {
@@ -51,17 +56,38 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters({
-      patients: 'user/patients'
+      patients: 'user/patients',
+      routine: 'routine/routine'
     })
   },
 
   methods: {
     ...mapActions({
-      getUsers: 'user/getUsers'
+      getUsers: 'user/getUsers',
+      deleteRoutine: 'routine/deleteRoutine',
+      getRoutine: 'routine/getRoutineByPatient'
     }),
 
     getMyPatients() {
       this.myPatients = this.patients.filter((patient: TUserResponse) => patient.nutritionistId === this.$auth.user?.id);
+    },
+
+    async showSnackbar({ message, type }: TSnackbarPayload) {
+      await this.$notifier.showMessage({ message, type });
+    },
+
+    async handleDeleteRoutine(patientId: number) {
+      try {
+        this.$nuxt.$loading.start();
+        await this.getRoutine({ id: patientId, nutritionistId: this.$auth.user?.id });
+        await this.deleteRoutine(this.routine?.id);
+        await this.showSnackbar({ ...defaultMessages.successDelete });
+      } catch (err) {
+        const message = (err as AxiosError).response?.data.message || defaultMessages.errorDelete;
+        await this.showSnackbar({ message, type: 'error' });
+      } finally {
+        this.$nuxt.$loading.finish();
+      }
     }
   },
 

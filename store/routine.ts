@@ -91,6 +91,10 @@ export const actions: ActionTree<TRoutinesState, TRoutinesState> = {
 
   async setRoutine({ commit }, data): Promise<void> {
     await commit('SET_ROUTINE', data ?? {});
+  },
+
+  async deleteRoutine({ commit }, routineId: number): Promise<void> {
+    const response = await this.$axios.$delete(`/routines/${ routineId }`);
   }
 };
 
