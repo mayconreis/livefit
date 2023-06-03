@@ -52,6 +52,13 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-btn color='primary' @click.stop.prevent='handleRequestConsult'>
+                      Solicitar consulta presencial
+                    </v-btn>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-radio-group row :rules='[...rules.required]' v-model='updateForm.profile' disabled>
                       <v-radio
                         v-for='profileOption in userProfileOptions'
@@ -89,6 +96,7 @@ import validateMixin from '~/mixins/validateMixin';
 import { mapActions, mapGetters } from 'vuex';
 import { defaultMessages, TSnackbarPayload } from '~/store/snackbar';
 import { AxiosError } from 'axios';
+import { ESolicitationTypes } from '~/store/solicitations';
 
 type TUpdateForm = {
   fullName: string;
@@ -130,10 +138,34 @@ export default Vue.extend({
   methods: {
     ...mapActions({
       getUsers: 'user/getUsers',
-      updateUser: 'user/updateUser'
+      updateUser: 'user/updateUser',
+      createSolicitation: 'solicitations/createSolicitation'
     }),
     async showSnackbar({ message, type }: TSnackbarPayload) {
       await this.$notifier.showMessage({ message, type });
+    },
+
+    async handleRequestConsult() {
+      if (this.$auth.user?.nutritionistId) {
+        this.$nuxt.$loading.start();
+
+        const payload = {
+          userId: this.$auth.user?.id,
+          nutritionistId: this.$auth.user?.nutritionistId,
+          solicitationType: ESolicitationTypes.CONSULT
+        };
+
+        try {
+          await this.createSolicitation({ ...payload });
+
+          await this.showSnackbar({ message: 'Consulta solicitada com sucesso!', type: 'success' });
+        } catch (err) {
+          const message = (err as AxiosError).response?.data.message || defaultMessages.errorStore.message;
+          await this.showSnackbar({ message, type: 'error' });
+        } finally {
+          this.$nuxt.$loading.finish();
+        }
+      }
     },
 
     async handleUpdateForm() {
