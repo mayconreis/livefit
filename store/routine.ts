@@ -22,10 +22,6 @@ export type TMealsPayload = {
   mealOptions: TMealOptionsPayload[]
 }
 
-export type TRoutineFilter = {
-  [key: string]: any
-}
-
 export type TRoutinePayload = {
   patientId: number;
   meals: TMealsPayload[]
@@ -58,6 +54,22 @@ export type TRoutineResponse = {
   nutritionistId: number,
   meals: TMealsResponse[]
 }
+export type TMealItemsUpdatePayload = {
+  id: number,
+  item: string,
+  quantity: string
+}
+
+export type TMealsUpdatePayload = {
+  id: number,
+  time: string,
+  period: EMealsPeriod,
+  mealItems: TMealItemsUpdatePayload[]
+}
+
+export type TRoutineUpdatePayload = {
+  meals: TMealsUpdatePayload[]
+}
 
 export const state = () => ({
   routines: [],
@@ -87,6 +99,10 @@ export const actions: ActionTree<TRoutinesState, TRoutinesState> = {
 
   async createRoutine({ commit }, payload: TRoutinePayload): Promise<void> {
     await new Routine({ ...payload }).save();
+  },
+
+  async updateRoutine({ commit }, { routineId, payload }): Promise<void> {
+    await Routine.config({ url: `/routines/${ routineId }`, method: 'PUT', data: payload }).get()
   },
 
   async setRoutine({ commit }, data): Promise<void> {

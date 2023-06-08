@@ -33,7 +33,11 @@ export const defaultMessages = {
     type: 'ERROR'
   },
   errorStore: {
-    message: 'Falha ao cadastrar este registros, por favor tente novamente!',
+    message: 'Falha ao cadastrar estes registros, por favor tente novamente!',
+    type: 'ERROR'
+  },
+  errorUpdate: {
+    message: 'Falha ao alterar estes registros, por favor tente novamente!',
     type: 'ERROR'
   },
   errorDelete: {

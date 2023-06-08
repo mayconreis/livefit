@@ -16,12 +16,26 @@
                 <v-card-actions class='justify-end'>
                   <v-btn
                     color='primary'
+                    icon
                     @click.stop.prevent='$nuxt.$emit("toggleRoutineDialog", {patientId: patient.id})'
                   >
-                    Cadastrar rotina
+                    <v-icon>
+                      mdi-plus
+                    </v-icon>
                   </v-btn>
-                  <v-btn color='accent' @click.stop.prevent='handleDeleteRoutine(patient.id)'>
-                    Remover rotina
+                  <v-btn
+                    icon
+                    color='secondary'
+                    @click.stop.prevent='$nuxt.$emit("toggleRoutineEditDialog", {patientId: patient.id})'
+                  >
+                    <v-icon>
+                      mdi-square-edit-outline
+                    </v-icon>
+                  </v-btn>
+                  <v-btn color='accent' icon @click.stop.prevent='handleDeleteRoutine(patient.id)'>
+                    <v-icon>
+                      mdi-delete
+                    </v-icon>
                   </v-btn>
                 </v-card-actions>
               </v-col>
@@ -31,6 +45,7 @@
       </v-col>
     </v-row>
     <AppRoutineForm />
+    <AppRoutineEditForm />
   </AppBodyContainer>
 </template>
 <script lang='ts'>
@@ -39,7 +54,6 @@ import { mapActions, mapGetters } from 'vuex';
 import { TUserResponse } from '~/store/user';
 import { defaultMessages, TSnackbarPayload } from '~/store/snackbar';
 import { AxiosError } from 'axios';
-import routine from '~/pages/client/routine/index.vue';
 
 export default Vue.extend({
   head() {
